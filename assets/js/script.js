@@ -102,13 +102,44 @@ window.onload = function() {
         taskSelected.remove();
     };
 
+    var editTask = function(taskId) {
+        console.log("editing task #" + taskId);
+
+        var taskSelected = document.querySelector(".task-item[data-task-id='" + taskId + "']");
+        console.log(taskSelected);
+
+        // get content from task name and type
+        var taskName = taskSelected.querySelector("h3.task-name").textContent;
+        var taskType = taskSelected.querySelector("span.task-type").textContent;
+
+        //set content to form
+        document.querySelector("input[name='task-name']").value = taskName;
+        document.querySelector("select[name='task-type']").value = taskType;
+
+
+        //update button to make clear we are editting
+        document.querySelector("#save-task").textContent = "Save Task";
+
+        formEl.setAttribute("data-task-id", taskId);
+
+        //update task info to new edited info
+
+
+    };
+
     var taskButtonHandler = function(event) {
         console.log(event.target);
 
+        // delete button was clicked
         if (event.target.matches(".delete-btn")) {
-            // get the element's task id
             var taskId = event.target.getAttribute("data-task-id");
             deleteTask(taskId);
+        }
+
+        // edit button was clicked
+        if (event.target.matches(".edit-btn")) {
+            var taskId = event.target.getAttribute("data-task-id");
+            editTask(taskId);
         }
     }
 
