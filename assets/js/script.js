@@ -10,7 +10,6 @@ window.onload = function () {
 
     var taskFormHandler = function (event) {
         event.preventDefault();
-
         var taskNameInput = document.querySelector("input[name='task-name']").value;
         var taskTypeInput = document.querySelector("select[name='task-type']").value;
 
@@ -20,6 +19,11 @@ window.onload = function () {
             return false;
         }
 
+        // reset form fields for next task to be entered
+        document.querySelector("input[name='task-name']").value = "";
+        document.querySelector("select[name='task-type']").selectedIndex = 0;
+
+        // check if task is new or one being edited by seeing if it has a data-task-id attribute
         var isEdit = formEl.hasAttribute("data-task-id");
 
         // has data attribute, so get task id and call function to complete edit process
@@ -34,13 +38,10 @@ window.onload = function () {
                 name: taskNameInput,
                 type: taskTypeInput,
                 status: "to do"
-            }
+            };
             // send it as an argument to createTaskEl
             createTaskEl(taskDataObj);
         }
-
-        //clear form
-        formEl.reset();
     };
 
     var createTaskEl = function (taskDataObj) {
@@ -57,7 +58,6 @@ window.onload = function () {
 
         //add HTML content to div
         taskInfoEl.innerHTML = "<h3 class ='task-name'>" + taskDataObj.name + "</h3><span class='task-type'>" + taskDataObj.type + "</span>";
-
         //add element to list item
         listItemEl.appendChild(taskInfoEl);
 
@@ -65,8 +65,22 @@ window.onload = function () {
         var taskActionsEl = createTaskActions(taskIdCounter);
         listItemEl.appendChild(taskActionsEl);
 
-        //add entire list item to list
-        tasksToDoEl.appendChild(listItemEl);
+        switch (taskDataObj.status) {
+            case "to do":
+              taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 0;
+              tasksToDoEl.append(listItemEl);
+              break;
+            case "in progress":
+              taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 1;
+              tasksInProgressEl.append(listItemEl);
+              break;
+            case "completed":
+              taskActionsEl.querySelector("select[name='status-change']").selectedIndex = 2;
+              tasksCompletedEl.append(listItemEl);
+              break;
+            default:
+              console.log("Something went wrong!");
+        }
 
         taskDataObj.id = taskIdCounter;
         tasks.push(taskDataObj);
