@@ -70,6 +70,7 @@ window.onload = function() {
 
         taskDataObj.id = taskIdCounter;
         tasks.push(taskDataObj);
+        saveTasks();
 
         // increase task counter for next unique id
         taskIdCounter++;
@@ -129,7 +130,7 @@ window.onload = function() {
 
         // reassign tasks array to be the same as updatedTaskArr
         tasks = updatedTaskArr;
-        console.log(tasks);
+        saveTasks();
     };
 
     var editTask = function(taskId) {
@@ -161,6 +162,7 @@ window.onload = function() {
                 tasks[i].type = taskType;
             }
         };
+        saveTasks();
 
         alert("Task Updated!");
 
@@ -212,9 +214,13 @@ window.onload = function() {
             }
         }
 
-        console.log(tasks);
-
+        saveTasks();
     }
+
+    var saveTasks = function() {
+        localStorage.setItem("tasks", JSON.stringify(tasks)); 
+    }
+
 
     pageContentEl.addEventListener("click", taskButtonHandler);
 
